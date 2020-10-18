@@ -1,14 +1,14 @@
 {
-    "name": "jadekun/sku",
+    "name": "sxc654/sku",
     "description": "",
     "type": "library",
     "keywords": ["laravel-admin", "extension"],
-    "homepage": "https://github.com/jade-kun/sku",
+    "homepage": "https://github.com/sxc654/sku",
     "license": "MIT",
     "authors": [
         {
-            "name": "jade",
-            "email": "jade@likunit.com"
+            "name": "sxc654",
+            "email": "793686951@qq.com"
         }
     ],
     "require": {
@@ -20,13 +20,13 @@
     },
     "autoload": {
         "psr-4": {
-            "JadeKun\\Sku\\": "src/"
+            "Sxc654\\Sku\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "JadeKun\\Sku\\SkuServiceProvider"
+                "Sxc654\\Sku\\SkuServiceProvider"
             ]
         }
     }

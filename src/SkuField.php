@@ -1,6 +1,6 @@
 <?php
 
-namespace JadeKun\Sku;
+namespace Sxc654\Sku;
 
 use Encore\Admin\Form\Field;
 

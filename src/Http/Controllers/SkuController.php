@@ -1,6 +1,6 @@
 <?php
 
-namespace JadeKun\Sku\Http\Controllers;
+namespace Sxc654\Sku\Http\Controllers;
 
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;

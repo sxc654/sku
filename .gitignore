@@ -1,7 +1,9 @@
 .DS_Store
+*.project
 phpunit.phar
-/vendor
 composer.phar
 composer.lock
-*.project
+
 .idea/
+/vendor
+/nbproject/private/
