@@ -7,6 +7,7 @@
         this.attrs = {};
         this.commonStock = 0; // 统一库存
         this.commonPrice = 0; // 统一价格
+        this.commonGoodsDeposit = 0; // 统一定金
         this.init();
     }
 
@@ -18,7 +19,7 @@
             let _dom = $(this);
             if (!_dom.hasClass('btn-success')) {
                 _dom.addClass('btn-success').removeClass('btn-default')
-                    .siblings().removeClass('btn-success').addClass('btn-default');
+                        .siblings().removeClass('btn-success').addClass('btn-default');
 
                 if (_dom.hasClass('Js_single_btn')) {
                     // 点击了单规格
@@ -36,11 +37,11 @@
         // 绑定属性值添加事件
         _this.warp.find('.sku_attr_key_val').on('click', '.Js_add_attr_val', function () {
             let html = '<div class="sku_attr_val_item">' +
-                '<div class="sku_attr_val_input">' +
-                '<input type="text" class="form-control">' +
-                '</div>' +
-                '<span class="btn btn-danger Js_remove_attr_val"><i class="glyphicon glyphicon-remove"></i></span>' +
-                '</div>';
+                    '<div class="sku_attr_val_input">' +
+                    '<input type="text" class="form-control">' +
+                    '</div>' +
+                    '<span class="btn btn-danger Js_remove_attr_val"><i class="glyphicon glyphicon-remove"></i></span>' +
+                    '</div>';
             $(this).before(html);
         });
 
@@ -53,24 +54,24 @@
         // 绑定添加属性名事件
         _this.warp.find('.Js_add_attr_name').click(function () {
             let html = '<tr>' +
-                '<td><input type="text" class="form-control"></td>' +
-                '<td>' +
-                '<div class="sku_attr_val_warp">' +
-                '<div class="sku_attr_val_item">' +
-                '<div class="sku_attr_val_input">' +
-                '<input type="text" class="form-control">' +
-                '</div>' +
-                '<span class="btn btn-danger Js_remove_attr_val"><i class="glyphicon glyphicon-remove"></i></span>' +
-                '</div>' +
-                '<div class="sku_attr_val_item Js_add_attr_val" style="padding-left:10px">' +
-                '<span class="btn btn-success"><i class="glyphicon glyphicon-plus"></i></span>' +
-                '</div>' +
-                '</div>' +
-                '</td>' +
-                '<td>' +
-                '<span class="btn btn-danger Js_remove_attr_name">移除</span>' +
-                '</td>' +
-                '</tr>';
+                    '<td><input type="text" class="form-control"></td>' +
+                    '<td>' +
+                    '<div class="sku_attr_val_warp">' +
+                    '<div class="sku_attr_val_item">' +
+                    '<div class="sku_attr_val_input">' +
+                    '<input type="text" class="form-control">' +
+                    '</div>' +
+                    '<span class="btn btn-danger Js_remove_attr_val"><i class="glyphicon glyphicon-remove"></i></span>' +
+                    '</div>' +
+                    '<div class="sku_attr_val_item Js_add_attr_val" style="padding-left:10px">' +
+                    '<span class="btn btn-success"><i class="glyphicon glyphicon-plus"></i></span>' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td>' +
+                    '<span class="btn btn-danger Js_remove_attr_name">移除</span>' +
+                    '</td>' +
+                    '</tr>';
             _this.warp.find('.sku_attr_key_val tbody').append(html)
         });
 
@@ -85,6 +86,13 @@
         _this.warp.find('.sku_attr_key_val tbody').on('change', 'input', _this.getSkuAttr.bind(_this));
         _this.warp.find('.sku_edit_warp tbody').on('keyup', 'input', _this.processSku.bind(_this));
 
+        // 统一库存
+        _this.warp.find('.sku_edit_warp thead').on('keyup', 'input.Js_stock', function () {
+            _this.commonStock = $(this).val();
+            _this.warp.find('.sku_edit_warp tbody td[data-field="stock"] input').val(_this.commonStock);
+            _this.processSku()
+        });
+
         // 统一价格
         _this.warp.find('.sku_edit_warp thead').on('keyup', 'input.Js_price', function () {
             _this.commonPrice = $(this).val();
@@ -92,10 +100,10 @@
             _this.processSku()
         });
 
-        // 统一库存
-        _this.warp.find('.sku_edit_warp thead').on('keyup', 'input.Js_stock', function () {
-            _this.commonStock = $(this).val();
-            _this.warp.find('.sku_edit_warp tbody td[data-field="stock"] input').val(_this.commonStock);
+        // 统一定金
+        _this.warp.find('.sku_edit_warp thead').on('keyup', 'input.Js_deposit', function () {
+            _this.commonGoodsDeposit = $(this).val();
+            _this.warp.find('.sku_edit_warp tbody td[data-field="goods_deposit"] input').val(_this.commonGoodsDeposit);
             _this.processSku()
         });
 
@@ -142,7 +150,7 @@
                     });
 
                     // 接着处理下一行
-                    if(index < attr_keys_len - 1) {
+                    if (index < attr_keys_len - 1) {
                         tr.find('td:eq(2) .Js_add_attr_name').trigger('click');
                     }
                 });
@@ -198,24 +206,31 @@
             attr_names.forEach(function (attr_name) {
                 thead_html += '<th>' + attr_name + '</th>'
             });
-            thead_html += '<th style="width: 100px">图片</th>';
-            thead_html += '<th style="width: 100px">价格 <input value="' + _this.commonPrice + '" type="text" style="width: 50px" class="Js_price"></th>';
-            thead_html += '<th style="width: 100px">库存 <input value="' + _this.commonStock + '" type="text" style="width: 50px" class="Js_stock"></th>';
+            
+            thead_html += '<th style="width: 120px">外部商品编号 </th>';
+            thead_html += '<th style="width: 100px">sku </th>';
+            thead_html += '<th style="width: 100px">制作工费/g </th>';
+            thead_html += '<th style="width: 100px">成色 </th>';
+            thead_html += '<th style="width: 100px">定金 <input value="' + _this.commonGoodsDeposit + '" type="text" style="width: 40px" class="Js_deposit"></th>';
+            thead_html += '<th style="width: 100px">佣金/g </th>';
+            thead_html += '<th style="width: 100px">标准金重/g </th>';
+            thead_html += '<th style="width: 100px">库存 <input value="' + _this.commonStock + '" type="text" style="width: 40px" class="Js_stock"></th>';
             thead_html += '</tr>';
+            
             _this.warp.find('.sku_edit_warp thead').html(thead_html);
 
             // 求笛卡尔积
             let cartesianProductOf = (function () {
-                    return Array.prototype.reduce.call(arguments, function (a, b) {
-                        var ret = [];
-                        a.forEach(function (a) {
-                            b.forEach(function (b) {
-                                ret.push(a.concat([b]));
-                            });
+                return Array.prototype.reduce.call(arguments, function (a, b) {
+                    var ret = [];
+                    a.forEach(function (a) {
+                        b.forEach(function (b) {
+                            ret.push(a.concat([b]));
                         });
-                        return ret;
-                    }, [[]]);
-                })(...Object.values(_this.attrs));
+                    });
+                    return ret;
+                }, [[]]);
+            })(...Object.values(_this.attrs));
 
             // 根据计算的笛卡尔积渲染tbody
             let tbody_html = '';
@@ -225,24 +240,29 @@
                     let attr_name = attr_names[index];
                     tbody_html += '<td data-field="' + attr_name + '">' + attr_val + '</td>';
                 });
-                tbody_html += '<td data-field="pic"><input value="" type="hidden" class="form-control"><span class="Js_sku_upload">+</span><span class="Js_sku_del_pic">清空</span></td>';
-                tbody_html += '<td data-field="price"><input value="' + _this.commonPrice + '" type="text" class="form-control"></td>';
+                tbody_html += '<td data-field="goods_no"><input value="" type="text" class="form-control"></td>';
+                tbody_html += '<td data-field="sku_no"><input value="" type="text" class="form-control"></td>';
+                tbody_html += '<td data-field="make_charges"><input value="" type="text" class="form-control"></td>';
+                tbody_html += '<td data-field="material_type"><input value="" type="text" class="form-control"></td>';
+                tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
+                tbody_html += '<td data-field="commission"><input value="" type="text" class="form-control"></td>';
+                tbody_html += '<td data-field="weight"><input value="" type="text" class="form-control"></td>';
                 tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
                 tbody_html += '</tr>'
             });
             _this.warp.find('.sku_edit_warp tbody').html(tbody_html);
 
-            if(default_sku) {
+            if (default_sku) {
                 // 填充数据
-                default_sku.forEach(function(item_sku, index) {
+                default_sku.forEach(function (item_sku, index) {
                     let tr = _this.warp.find('.sku_edit_warp tbody tr').eq(index);
-                    Object.keys(item_sku).forEach(function(field) {
-                        let input = tr.find('td[data-field="'+field+'"] input');
-                        if(input.length) {
+                    Object.keys(item_sku).forEach(function (field) {
+                        let input = tr.find('td[data-field="' + field + '"] input');
+                        if (input.length) {
                             input.val(item_sku[field]);
-                            let sku_upload = tr.find('td[data-field="'+field+'"] .Js_sku_upload');
-                            if(sku_upload.length) {
-                                sku_upload.css('background-image','url('+item_sku[field]+')');
+                            let sku_upload = tr.find('td[data-field="' + field + '"] .Js_sku_upload');
+                            if (sku_upload.length) {
+                                sku_upload.css('background-image', 'url(' + item_sku[field] + ')');
                             }
                         }
                     })
