@@ -6,15 +6,14 @@ use Encore\Admin\Admin;
 use Encore\Admin\Form;
 use Illuminate\Support\ServiceProvider;
 
-class SkuServiceProvider extends ServiceProvider
-{
+class SkuServiceProvider extends ServiceProvider {
+
     /**
      * {@inheritdoc}
      */
-    public function boot(Sku $extension)
-    {
-        if (! Sku::boot()) {
-            return ;
+    public function boot(Sku $extension) {
+        if (!Sku::boot()) {
+            return;
         }
 
         if ($views = $extension->views()) {
@@ -23,13 +22,15 @@ class SkuServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole() && $assets = $extension->assets()) {
             $this->publishes(
-                [$assets => public_path('vendor/sxc654/sku')],
-                'sku'
+                    [$assets => public_path('vendor/sxc654/sku')], 'sku'
             );
         }
 
         Admin::booting(function () {
-            Form::extend('sku', SkuField::class);
+            Form::extend('skuOne', SkuOneField::class);
+            Form::extend('skuTwo', SkuTwoField::class);
+            Form::extend('skuFour', SkuFourField::class);
         });
     }
+
 }
