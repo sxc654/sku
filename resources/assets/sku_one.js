@@ -15,7 +15,7 @@
         let _this = this;
 
         // 选择sku的类型（单规格/多规格）
-        _this.warp.find('.sku_attr_select .btn').click(function () {
+        _this.warp.find('.sku_one_attr_select .btn').click(function () {
             let _dom = $(this);
             if (!_dom.hasClass('btn-success')) {
                 _dom.addClass('btn-success').removeClass('btn-default')
@@ -24,18 +24,18 @@
                 if (_dom.hasClass('Js_single_btn')) {
                     // 点击了单规格
                     // 隐藏多规格编辑DOM
-                    _this.warp.find('.sku_attr_key_val,.sku_edit_warp').hide();
+                    _this.warp.find('.sku_one_attr_key_val,.sku_one_edit_warp').hide();
                 } else if (_dom.hasClass('Js_many_btn')) {
                     // 点击了多规格
                     // 显示多规格编辑DOM
-                    _this.warp.find('.sku_attr_key_val,.sku_edit_warp').show();
+                    _this.warp.find('.sku_one_attr_key_val,.sku_one_edit_warp').show();
                 }
             }
             _this.processSku()
         });
 
         // 绑定属性值添加事件
-        _this.warp.find('.sku_attr_key_val').on('click', '.Js_add_attr_val', function () {
+        _this.warp.find('.sku_one_attr_key_val').on('click', '.Js_add_attr_val', function () {
             let html = '<div class="sku_attr_val_item">' +
                     '<div class="sku_attr_val_input">' +
                     '<input type="text" class="form-control">' +
@@ -46,7 +46,7 @@
         });
 
         // 绑定属性值移除事件
-        _this.warp.find('.sku_attr_key_val').on('click', '.Js_remove_attr_val', function () {
+        _this.warp.find('.sku_one_attr_key_val').on('click', '.Js_remove_attr_val', function () {
             $(this).parent('.sku_attr_val_item').remove();
             _this.getSkuAttr();
         });
@@ -72,65 +72,65 @@
                     '<span class="btn btn-danger Js_remove_attr_name">移除</span>' +
                     '</td>' +
                     '</tr>';
-            _this.warp.find('.sku_attr_key_val tbody').append(html)
+            _this.warp.find('.sku_one_attr_key_val tbody').append(html)
         });
 
         // 绑定移除属性名事件
-        _this.warp.find('.sku_attr_key_val').on('click', '.Js_remove_attr_name', function () {
+        _this.warp.find('.sku_one_attr_key_val').on('click', '.Js_remove_attr_name', function () {
             console.log('移除属性名');
             $(this).parents('tr').remove();
             _this.getSkuAttr()
         });
 
         // 绑定input变化事件
-        _this.warp.find('.sku_attr_key_val tbody').on('change', 'input', _this.getSkuAttr.bind(_this));
-        _this.warp.find('.sku_edit_warp tbody').on('keyup', 'input', _this.processSku.bind(_this));
+        _this.warp.find('.sku_one_attr_key_val tbody').on('change', 'input', _this.getSkuAttr.bind(_this));
+        _this.warp.find('.sku_one_edit_warp tbody').on('keyup', 'input', _this.processSku.bind(_this));
 
         // 统一库存
-        _this.warp.find('.sku_edit_warp thead').on('keyup', 'input.Js_stock', function () {
+        _this.warp.find('.sku_one_edit_warp thead').on('keyup', 'input.Js_stock', function () {
             _this.commonStock = $(this).val();
-            _this.warp.find('.sku_edit_warp tbody td[data-field="stock"] input').val(_this.commonStock);
+            _this.warp.find('.sku_one_edit_warp tbody td[data-field="stock"] input').val(_this.commonStock);
             _this.processSku()
         });
 
         // 统一价格
-        _this.warp.find('.sku_edit_warp thead').on('keyup', 'input.Js_price', function () {
+        _this.warp.find('.sku_one_edit_warp thead').on('keyup', 'input.Js_price', function () {
             _this.commonPrice = $(this).val();
-            _this.warp.find('.sku_edit_warp tbody td[data-field="price"] input').val(_this.commonPrice);
+            _this.warp.find('.sku_one_edit_warp tbody td[data-field="price"] input').val(_this.commonPrice);
             _this.processSku()
         });
 
         // 统一定金
-        _this.warp.find('.sku_edit_warp thead').on('keyup', 'input.Js_deposit', function () {
+        _this.warp.find('.sku_one_edit_warp thead').on('keyup', 'input.Js_deposit', function () {
             _this.commonGoodsDeposit = $(this).val();
-            _this.warp.find('.sku_edit_warp tbody td[data-field="goods_deposit"] input').val(_this.commonGoodsDeposit);
+            _this.warp.find('.sku_one_edit_warp tbody td[data-field="goods_deposit"] input').val(_this.commonGoodsDeposit);
             _this.processSku()
         });
 
         // SKU图片上传
-        _this.warp.find('.sku_edit_warp tbody').on('click', '.Js_sku_upload', function() {
+        _this.warp.find('.sku_one_edit_warp tbody').on('click', '.Js_sku_upload', function() {
             _this.upload($(this))
         });
 
         // 清空SKU图片
-        _this.warp.find('.sku_edit_warp tbody').on('click','.Js_sku_del_pic', function() {
+        _this.warp.find('.sku_one_edit_warp tbody').on('click','.Js_sku_del_pic', function() {
             let td = $(this).parent();
             td.find('input').val('');
             td.find('.Js_sku_upload').css('background-image','none');
             _this.processSku()
         });
 
-        let old_val = _this.warp.find('.Js_sku_input').val();
+        let old_val = _this.warp.find('.Js_one_sku_input').val();
         if (old_val) {
             // 根据值生成DOM
             old_val = JSON.parse(old_val);
             if (old_val.type === 'many') {
                 // 多规格
-                _this.warp.find('.sku_attr_select .Js_many_btn').trigger('click');
+                _this.warp.find('.sku_one_attr_select .Js_many_btn').trigger('click');
 
                 // 处理规格名
                 let attr_names = old_val.attrs;
-                let tbody = _this.warp.find('.sku_attr_key_val tbody');
+                let tbody = _this.warp.find('.sku_one_attr_key_val tbody');
                 let attr_keys = Object.keys(attr_names);
                 let attr_keys_len = attr_keys.length;
                 attr_keys.forEach(function (attr_key, index) {
@@ -168,7 +168,7 @@
     SKU.prototype.getSkuAttr = function () {
         let attr = {}; // 所有属性
         let _this = this;
-        let trs = _this.warp.find('.sku_attr_key_val tbody tr');
+        let trs = _this.warp.find('.sku_one_attr_key_val tbody tr');
         trs.each(function () {
             let tr = $(this);
             let attr_name = tr.find('td:eq(0) input').val(); // 属性名
@@ -198,8 +198,8 @@
         let _this = this;
         let attr_names = Object.keys(_this.attrs);
         if (attr_names.length === 0) {
-            _this.warp.find('.sku_edit_warp tbody').html(' ');
-            _this.warp.find('.sku_edit_warp thead').html(' ');
+            _this.warp.find('.sku_one_edit_warp tbody').html(' ');
+            _this.warp.find('.sku_one_edit_warp thead').html(' ');
         } else {
             // 渲染表头
             let thead_html = '<tr>';
@@ -215,7 +215,7 @@
             thead_html += '<th style="width: 100px">库存 <input value="' + _this.commonStock + '" type="text" style="width: 40px" class="Js_stock"></th>';
             thead_html += '</tr>';
             
-            _this.warp.find('.sku_edit_warp thead').html(thead_html);
+            _this.warp.find('.sku_one_edit_warp thead').html(thead_html);
 
             // 求笛卡尔积
             let cartesianProductOf = (function () {
@@ -246,12 +246,12 @@
                 tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
                 tbody_html += '</tr>'
             });
-            _this.warp.find('.sku_edit_warp tbody').html(tbody_html);
+            _this.warp.find('.sku_one_edit_warp tbody').html(tbody_html);
 
             if (default_sku) {
                 // 填充数据
                 default_sku.forEach(function (item_sku, index) {
-                    let tr = _this.warp.find('.sku_edit_warp tbody tr').eq(index);
+                    let tr = _this.warp.find('.sku_one_edit_warp tbody tr').eq(index);
                     Object.keys(item_sku).forEach(function (field) {
                         let input = tr.find('td[data-field="' + field + '"] input');
                         if (input.length) {
@@ -272,12 +272,12 @@
     SKU.prototype.processSku = function () {
         let _this = this;
         let sku_json = {};
-        sku_json.type = _this.warp.find('.sku_attr_select .btn.btn-success').attr('data-type');
+        sku_json.type = _this.warp.find('.sku_one_attr_select .btn.btn-success').attr('data-type');
         if (sku_json.type === 'many') {
             // 多规格
             sku_json.attrs = _this.attrs;
             let sku = [];
-            _this.warp.find('.sku_edit_warp tbody tr').each(function () {
+            _this.warp.find('.sku_one_edit_warp tbody tr').each(function () {
                 let tr = $(this);
                 let item_sku = {};
                 tr.find('td[data-field]').each(function () {
@@ -294,7 +294,7 @@
             });
             sku_json.sku = sku;
         }
-        _this.warp.find('.Js_sku_input').val(JSON.stringify(sku_json));
+        _this.warp.find('.Js_one_sku_input').val(JSON.stringify(sku_json));
     };
 
     // 图片上传
@@ -332,5 +332,5 @@
         }
     };
 
-    window.JadeKunSKU = SKU;
+    window.SkuOne = SKU;
 })();

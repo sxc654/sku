@@ -6,10 +6,10 @@ use Encore\Admin\Form\Field;
 
 class SkuFourField extends Field
 {
-    protected $view = 'sku::sku_field';
+    protected $view = 'sku::sku_field_four';
 
     protected static $js = [
-        'vendor/sxc654/sku/sku_two.js'
+        'vendor/sxc654/sku/sku_four.js'
     ];
 
     protected static $css = [
@@ -20,7 +20,7 @@ class SkuFourField extends Field
     {
 
         $this->script = <<< EOF
-window.DemoSku = new JadeKunSKU('{$this->getElementClassSelector()}');
+window.DemoSku = new SkuFour('{$this->getElementClassSelector()}');
 EOF;
         return parent::render();
     }

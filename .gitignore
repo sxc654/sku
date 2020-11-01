@@ -6,4 +6,4 @@ composer.lock
 
 .idea/
 /vendor
-/nbproject/private/
+/nbproject
