@@ -219,12 +219,12 @@
             });
 
             thead_html += '<th style="width: 120px">外部商品编号</th>';
-            thead_html += '<th style="width: 100px">商品sku </th>';
+            thead_html += '<th style="width: 100px">商品sku</th>';
             thead_html += '<th style="width: 100px">制作工费/g</th>';
             thead_html += '<th style="width: 100px">原料类型</th>';
             thead_html += '<th style="width: 100px">定金</th>';
-            thead_html += '<th style="width: 100px">佣金/g </th>';
-            thead_html += '<th style="width: 100px">标准金重/g </th>';
+            thead_html += '<th style="width: 100px">佣金/g</th>';
+            thead_html += '<th style="width: 100px">标准金重/g</th>';
             thead_html += '<th style="width: 100px">库存</th>';
             thead_html += '</tr>';
 

@@ -216,12 +216,12 @@
                 thead_html += '<th>' + attr_name + '</th>'
             });
 
-            thead_html += '<th style="width: 120px">外部商品编号 </th>';
-            thead_html += '<th style="width: 100px">sku </th>';
-            thead_html += '<th style="width: 100px">定金 <input value="' + _this.commonGoodsDeposit + '" type="text" style="width: 40px" class="Js_deposit"></th>';
-            thead_html += '<th style="width: 100px">参考价格 </th>';
-            thead_html += '<th style="width: 100px">分佣比例 </th>';
-            thead_html += '<th style="width: 100px">库存 <input value="' + _this.commonStock + '" type="text" style="width: 40px" class="Js_stock"></th>';
+            thead_html += '<th style="width: 120px">外部商品编号</th>';
+            thead_html += '<th style="width: 100px">sku</th>';
+            thead_html += '<th style="width: 100px">定金</th>';
+            thead_html += '<th style="width: 100px">参考价格</th>';
+            thead_html += '<th style="width: 100px">分佣比例</th>';
+            thead_html += '<th style="width: 100px">库存</th>';
             thead_html += '</tr>';
 
             _this.warp.find('.sku_one_edit_warp thead').html(thead_html);
