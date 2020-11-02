@@ -5,9 +5,17 @@
     function SKU(warp) {
         this.warp = $(warp);
         this.attrs = {};
-        this.commonStock = 0; // 统一库存
         this.commonPrice = 0; // 统一价格
-        this.commonGoodsDeposit = 0; // 统一定金
+        // 增加字段
+        this.commonSkuId = '';
+        this.commonGoodsNo = '';
+        this.commonSkuNo = '';
+        this.commonMakeCharges = '';
+        this.commonMaterialType = '999';
+        this.commonGoodsDeposit = '';
+        this.commonCommission = '';
+        this.commonStock = ''; // 统一库存
+        this.commonWeight = ''; // 统一重量
         this.init();
     }
 
@@ -189,12 +197,15 @@
 
         if (JSON.stringify(_this.attrs) !== JSON.stringify(attr)) {
             _this.attrs = attr;
-            _this.SKUForm()
+            // 1. 获取历史数据，渲染数据，
+            let old_val = _this.warp.find('.Js_two_sku_input').val();
+            old_val = JSON.parse(old_val);
+            _this.SKUForm(old_val.sku, 1)
         }
     };
 
     // 生成具体的SKU配置表单
-    SKU.prototype.SKUForm = function (default_sku) {
+    SKU.prototype.SKUForm = function (default_sku, type = 0) {
         let _this = this;
         let attr_names = Object.keys(_this.attrs);
         if (attr_names.length === 0) {
@@ -207,14 +218,14 @@
                 thead_html += '<th>' + attr_name + '</th>'
             });
 
-            thead_html += '<th style="width: 120px">外部商品编号 </th>';
-            thead_html += '<th style="width: 100px">sku </th>';
-            thead_html += '<th style="width: 100px">制作工费/g </th>';
-            thead_html += '<th style="width: 100px">原料类型 </th>';
-            thead_html += '<th style="width: 100px">定金 <input value="' + _this.commonGoodsDeposit + '" type="text" style="width: 40px" class="Js_deposit"></th>';
+            thead_html += '<th style="width: 120px">外部商品编号</th>';
+            thead_html += '<th style="width: 100px">商品sku </th>';
+            thead_html += '<th style="width: 100px">制作工费/g</th>';
+            thead_html += '<th style="width: 100px">原料类型</th>';
+            thead_html += '<th style="width: 100px">定金</th>';
             thead_html += '<th style="width: 100px">佣金/g </th>';
             thead_html += '<th style="width: 100px">标准金重/g </th>';
-            thead_html += '<th style="width: 100px">库存 <input value="' + _this.commonStock + '" type="text" style="width: 40px" class="Js_stock"></th>';
+            thead_html += '<th style="width: 100px">库存</th>';
             thead_html += '</tr>';
 
             _this.warp.find('.sku_two_edit_warp thead').html(thead_html);
@@ -240,15 +251,65 @@
                     let attr_name = attr_names[index];
                     tbody_html += '<td data-field="' + attr_name + '">' + attr_val + '</td>';
                 });
-                tbody_html += '<td data-field="goods_no"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="sku_no"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="make_charges"><input value="" type="text" class="form-control"></td>';
-                tbody_html += `<td><select class="sel form-control"></select></td>`;
-                tbody_html += `<td data-field="material_type" style='display:none'><input value="" type="text" class="form-control"></td>`;
-                tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="commission"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="weight"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
+//                tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="" type="text" class="form-control"></td>';
+//                tbody_html += '<td data-field="goods_no"><input value="" type="text" class="form-control"></td>';
+//                tbody_html += '<td data-field="sku_no"><input value="" type="text" class="form-control"></td>';
+//                tbody_html += '<td data-field="make_charges"><input value="" type="text" class="form-control"></td>';
+//                tbody_html += `<td><select class="sel form-control"></select></td>`;
+//                tbody_html += `<td data-field="material_type" style='display:none'><input value="" type="text" class="form-control"></td>`;
+//                tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
+//                tbody_html += '<td data-field="commission"><input value="" type="text" class="form-control"></td>';
+//                tbody_html += '<td data-field="weight"><input value="" type="text" class="form-control"></td>';
+//                tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
+
+                // 3. 添加新的规则值时，保留历史信息
+                if (default_sku && type == 1) {
+                    let sku_sku_id = _this.commonSkuId;
+                    let sku_goods_no = _this.commonGoodsNo;
+                    let sku_sku_no = _this.commonSkuNo;
+                    let sku_make_charges = _this.commonMakeCharges;
+                    let sku_material_type = _this.commonMaterialType;
+                    let sku_goods_deposit = _this.commonGoodsDeposit;
+                    let sku_commission = _this.commonCommission;
+                    let sku_weight = _this.commonWeight;
+                    let sku_stock = _this.commonStock;
+                    default_sku.forEach(function (item_sku, index) {
+                        let skus = Object.values(item_sku);
+                        if (sku_item.every(val => skus.includes(val))) {
+                            sku_sku_id = item_sku.goods_sku_id;
+                            sku_goods_no = item_sku.goods_no;
+                            sku_sku_no = item_sku.sku_no;
+                            sku_make_charges = item_sku.make_charges;
+                            sku_material_type = item_sku.material_type;
+                            sku_goods_deposit = item_sku.goods_deposit;
+                            sku_commission = item_sku.commission;
+                            sku_weight = item_sku.weight;
+                            sku_stock = item_sku.stock;
+                        }
+                    })
+                    tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="' + sku_sku_id + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_no"><input value="' + sku_goods_no + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="sku_no"><input value="' + sku_sku_no + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="make_charges"><input value="' + sku_make_charges + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td><select class="sel form-control"></select></td>';
+                    tbody_html += '<td data-field="material_type" style="display:none"><input value="' + sku_material_type + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_deposit"><input value="' + sku_goods_deposit + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="commission"><input value="' + sku_commission + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="weight"><input value="' + sku_weight + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="stock"><input value="' + sku_stock + '" type="text" class="form-control"></td>';
+                } else {
+                    tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="' + _this.commonSkuId + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_no"><input value="' + _this.commonGoodsNo + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="sku_no"><input value="' + _this.commonSkuNo + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="make_charges"><input value="' + _this.commonMakeCharges + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td><select class="sel form-control"></select></td>';
+                    tbody_html += '<td data-field="material_type" style="display:none"><input value="' + _this.commonMaterialType + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="commission"><input value="' + _this.commonCommission + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="weight"><input value="' + _this.commonWeight + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
+                }
+
                 tbody_html += '</tr>'
             });
             _this.warp.find('.sku_two_edit_warp tbody').html(tbody_html);
@@ -297,9 +358,9 @@
             _this.warp.find('.sku_two_edit_warp tbody tr').each(function () {
 
                 let tr = $(this);
+                // 获取当前循环值
                 let select = tr.find("option:selected").val();
-                tr.find('td input').eq(3).attr("value", select)
-
+                tr.find('td input').eq(4).attr("value", select)
 
                 let item_sku = {};
                 tr.find('td[data-field]').each(function () {

@@ -5,9 +5,15 @@
     function SKU(warp) {
         this.warp = $(warp);
         this.attrs = {};
-        this.commonStock = 0; // 统一库存
         this.commonPrice = 0; // 统一价格
-        this.commonGoodsDeposit = 0; // 统一定金
+        // 增加字段
+        this.commonSkuId = '';
+        this.commonGoodsNo = '';
+        this.commonSkuNo = '';
+        this.commonGoodsDeposit = '';
+        this.commonSellPrice = '';
+        this.commonCommissionProportion = '';
+        this.commonStock = ''; // 统一库存
         this.init();
     }
 
@@ -108,15 +114,15 @@
         });
 
         // SKU图片上传
-        _this.warp.find('.sku_one_edit_warp tbody').on('click', '.Js_sku_upload', function() {
+        _this.warp.find('.sku_one_edit_warp tbody').on('click', '.Js_sku_upload', function () {
             _this.upload($(this))
         });
 
         // 清空SKU图片
-        _this.warp.find('.sku_one_edit_warp tbody').on('click','.Js_sku_del_pic', function() {
+        _this.warp.find('.sku_one_edit_warp tbody').on('click', '.Js_sku_del_pic', function () {
             let td = $(this).parent();
             td.find('input').val('');
-            td.find('.Js_sku_upload').css('background-image','none');
+            td.find('.Js_sku_upload').css('background-image', 'none');
             _this.processSku()
         });
 
@@ -189,7 +195,10 @@
 
         if (JSON.stringify(_this.attrs) !== JSON.stringify(attr)) {
             _this.attrs = attr;
-            _this.SKUForm()
+            // 1. 获取历史数据，渲染数据，
+            let old_val = _this.warp.find('.Js_one_sku_input').val();
+            old_val = JSON.parse(old_val);
+            _this.SKUForm(old_val.sku, 1)
         }
     };
 
@@ -206,7 +215,7 @@
             attr_names.forEach(function (attr_name) {
                 thead_html += '<th>' + attr_name + '</th>'
             });
-            
+
             thead_html += '<th style="width: 120px">外部商品编号 </th>';
             thead_html += '<th style="width: 100px">sku </th>';
             thead_html += '<th style="width: 100px">定金 <input value="' + _this.commonGoodsDeposit + '" type="text" style="width: 40px" class="Js_deposit"></th>';
@@ -214,7 +223,7 @@
             thead_html += '<th style="width: 100px">分佣比例 </th>';
             thead_html += '<th style="width: 100px">库存 <input value="' + _this.commonStock + '" type="text" style="width: 40px" class="Js_stock"></th>';
             thead_html += '</tr>';
-            
+
             _this.warp.find('.sku_one_edit_warp thead').html(thead_html);
 
             // 求笛卡尔积
@@ -238,12 +247,48 @@
                     let attr_name = attr_names[index];
                     tbody_html += '<td data-field="' + attr_name + '">' + attr_val + '</td>';
                 });
-                tbody_html += '<td data-field="goods_no"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="sku_no"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="sell_price"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="commission_proportion"><input value="" type="text" class="form-control"></td>';
-                tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
+
+
+                // 3. 添加新的规则值时，保留历史信息
+                if (default_sku && type == 1) {
+                    let sku_sku_id = _this.commonSkuId;
+                    let sku_goods_no = _this.commonGoodsNo;
+                    let sku_sku_no = _this.commonSkuNo;
+                    let sku_goods_deposit = _this.commonGoodsDeposit;
+                    let sku_sell_price = _this.commonSellPrice;
+                    let sku_commission_proportion = _this.commonCommissionProportion;
+                    let sku_stock = _this.commonStock;
+                    default_sku.forEach(function (item_sku, index) {
+                        let skus = Object.values(item_sku);
+                        if (sku_item.every(val => skus.includes(val))) {
+                            sku_sku_id = item_sku.goods_sku_id;
+                            sku_goods_no = item_sku.goods_no;
+                            sku_sku_no = item_sku.sku_no;
+                            sku_goods_deposit = item_sku.goods_deposit;
+                            sku_sell_price = item_sku.sell_price;
+                            sku_commission_proportion = item_sku.commission_proportion;
+                            sku_stock = item_sku.stock;
+                        }
+                    })
+                    tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="' + sku_sku_id + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_no"><input value="' + sku_goods_no + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="sku_no"><input value="' + sku_sku_no + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_deposit"><input value="' + sku_goods_deposit + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="sell_price"><input value="' + sku_sell_price + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="commission_proportion"><input value="' + sku_commission_proportion + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="stock"><input value="' + sku_stock + '" type="text" class="form-control"></td>';
+                } else {
+                    tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="' + _this.commonSkuId + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_no"><input value="' + _this.commonGoodsNo + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="sku_no"><input value="' + _this.commonSkuNo + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="sell_price"><input value="' + _this.commonSellPrice + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="commission_proportion"><input value="' + _this.commonCommissionProportion + '" type="text" class="form-control"></td>';
+                    tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
+                }
+
+
+
                 tbody_html += '</tr>'
             });
             _this.warp.find('.sku_one_edit_warp tbody').html(tbody_html);
@@ -298,17 +343,17 @@
     };
 
     // 图片上传
-    SKU.prototype.upload = function(obj) {
+    SKU.prototype.upload = function (obj) {
         let _this = this;
         // 创建input[type="file"]元素
         let file_input = document.createElement('input');
-        file_input.setAttribute('type','file');
-        file_input.setAttribute('accept','image/x-png,image/jpeg');
+        file_input.setAttribute('type', 'file');
+        file_input.setAttribute('accept', 'image/x-png,image/jpeg');
 
         // 模拟点击 选择文件
         file_input.click();
 
-        file_input.onchange = function() {
+        file_input.onchange = function () {
             let file = file_input.files[0];  //获取上传的文件名
             let formData = new FormData();
             formData.append('file', file);
@@ -324,7 +369,7 @@
                 },
                 processData: false, //告诉jQuery不要去处理发送的数据
                 success: function (res) {
-                    obj.css('background-image','url('+res.url+')');
+                    obj.css('background-image', 'url(' + res.url + ')');
                     obj.parent().find('input').val(res.url);
                     _this.processSku()
                 }
