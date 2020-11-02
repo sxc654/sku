@@ -286,8 +286,7 @@
                     tbody_html += '<td data-field="goods_no"><input value="' + sku_goods_no + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="sku_no"><input value="' + sku_sku_no + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="make_charges"><input value="' + sku_make_charges + '" type="text" class="form-control"></td>';
-                    tbody_html += '<td><select class="sel form-control"></select></td>';
-                    tbody_html += '<td data-field="material_type" style="display:none"><input value="' + sku_material_type + '" type="text" class="form-control"></td>';
+                    tbody_html += `<td data-field="material_type"><select class="form-control" id="sel"></select></td>`;
                     tbody_html += '<td data-field="goods_deposit"><input value="' + sku_goods_deposit + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="commission"><input value="' + sku_commission + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="weight"><input value="' + sku_weight + '" type="text" class="form-control"></td>';
@@ -297,8 +296,7 @@
                     tbody_html += '<td data-field="goods_no"><input value="' + _this.commonGoodsNo + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="sku_no"><input value="' + _this.commonSkuNo + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="make_charges"><input value="' + _this.commonMakeCharges + '" type="text" class="form-control"></td>';
-                    tbody_html += '<td><select class="sel form-control"></select></td>';
-                    tbody_html += '<td data-field="material_type" style="display:none"><input value="' + _this.commonMaterialType + '" type="text" class="form-control"></td>';
+                    tbody_html += `<td data-field="material_type"><select class="form-control" id="sel"></select></td>`;
                     tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="commission"><input value="' + _this.commonCommission + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="weight"><input value="' + _this.commonWeight + '" type="text" class="form-control"></td>';
