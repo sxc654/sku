@@ -203,7 +203,7 @@
     };
 
     // 生成具体的SKU配置表单
-    SKU.prototype.SKUForm = function (default_sku) {
+    SKU.prototype.SKUForm = function (default_sku, type = 0) {
         let _this = this;
         let attr_names = Object.keys(_this.attrs);
         if (attr_names.length === 0) {

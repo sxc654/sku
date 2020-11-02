@@ -251,16 +251,6 @@
                     let attr_name = attr_names[index];
                     tbody_html += '<td data-field="' + attr_name + '">' + attr_val + '</td>';
                 });
-//                tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="" type="text" class="form-control"></td>';
-//                tbody_html += '<td data-field="goods_no"><input value="" type="text" class="form-control"></td>';
-//                tbody_html += '<td data-field="sku_no"><input value="" type="text" class="form-control"></td>';
-//                tbody_html += '<td data-field="make_charges"><input value="" type="text" class="form-control"></td>';
-//                tbody_html += `<td><select class="sel form-control"></select></td>`;
-//                tbody_html += `<td data-field="material_type" style='display:none'><input value="" type="text" class="form-control"></td>`;
-//                tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
-//                tbody_html += '<td data-field="commission"><input value="" type="text" class="form-control"></td>';
-//                tbody_html += '<td data-field="weight"><input value="" type="text" class="form-control"></td>';
-//                tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
 
                 // 3. 添加新的规则值时，保留历史信息
                 if (default_sku && type == 1) {
