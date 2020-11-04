@@ -6,16 +6,7 @@
         this.warp = $(warp);
 
         this.attrs = {};
-        this.resultSku = this.warp.find('.Js_two_sku_input').val();
-        if (this.resultSku) {
-            let arr = JSON.parse(this.resultSku).sku;
-            let newArr = [];
-            arr.forEach(item => {
-                newArr.push(item.material_type)
-            });
-            this.commonNewArr = newArr;
-        }
-
+        
         // 全新的黄金下拉
         var goldArr = ['999', '9999', '99999', '古法'];
         var newOption = '';
@@ -35,6 +26,16 @@
         this.commonCommission = '';
         this.commonStock = ''; // 统一库存
         this.commonWeight = ''; // 统一重量
+        
+        this.resultSku = this.warp.find('.Js_two_sku_input').val();
+        if (this.resultSku) {
+            let arr = JSON.parse(this.resultSku).sku;
+            let newArr = [];
+            arr.forEach(item => {
+                newArr.push(item.material_type)
+            });
+            this.commonNewArr = newArr;
+        }
         this.init();
     }
 
@@ -273,7 +274,6 @@
                     tbody_html += '<td data-field="' + attr_name + '">' + attr_val + '</td>';
                 });
 
-
                 // 黄金数组
                 var newArr = _this.commonNewArr;
                 if (newArr) {
@@ -285,8 +285,6 @@
                         oldOption = oldOption + '<option value="' + gold[key] + '" ' + selected + '>' + gold[key] + '</option>';
                     }
                 }
-
-
 
                 // 3. 添加新的规则值时，保留历史信息
                 if (default_sku && type == 1) {
@@ -379,8 +377,8 @@
                 let tr = $(this);
                 // 获取当前循环值
                 let select = tr.find("option:selected").val();
-                tr.find('td input').eq(4).attr("value", select);
-
+                tr.find('td input').eq(4).val(select);
+                
                 let item_sku = {};
                 tr.find('td[data-field]').each(function () {
                     let td = $(this);
@@ -400,4 +398,5 @@
     };
 
     window.SkuTwo = SKU;
+    
 })();
