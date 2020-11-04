@@ -4,14 +4,33 @@
 
     function SKU(warp) {
         this.warp = $(warp);
+
         this.attrs = {};
+        this.resultSku = this.warp.find('.Js_two_sku_input').val();
+        if (this.resultSku) {
+            let arr = JSON.parse(this.resultSku).sku;
+            let newArr = [];
+            arr.forEach(item => {
+                newArr.push(item.material_type)
+            });
+            this.commonNewArr = newArr;
+        }
+
+        // 全新的黄金下拉
+        var goldArr = ['999', '9999', '99999', '古法'];
+        var newOption = '';
+        for (var k in goldArr) {
+            newOption = newOption + '<option value="' + goldArr[k] + '">' + goldArr[k] + '</option>';
+        }
+        this.commonTypeSelect = newOption;
+
         this.commonPrice = 0; // 统一价格
         // 增加字段
         this.commonSkuId = '';
         this.commonGoodsNo = '';
         this.commonSkuNo = '';
         this.commonMakeCharges = '';
-        this.commonMaterialType = '999';
+        this.commonMaterialType = '';
         this.commonGoodsDeposit = '';
         this.commonCommission = '';
         this.commonStock = ''; // 统一库存
@@ -245,12 +264,29 @@
 
             // 根据计算的笛卡尔积渲染tbody
             let tbody_html = '';
-            cartesianProductOf.forEach(function (sku_item) {
+
+
+            cartesianProductOf.forEach(function (sku_item, index) {
                 tbody_html += '<tr>';
                 sku_item.forEach(function (attr_val, index) {
                     let attr_name = attr_names[index];
                     tbody_html += '<td data-field="' + attr_name + '">' + attr_val + '</td>';
                 });
+
+
+                // 黄金数组
+                var newArr = _this.commonNewArr;
+                if (newArr) {
+                    var gold = ['999', '9999', '99999', '古法'];
+                    var oldOption = '';
+                    for (var key in gold) {
+                        var value_key = gold[key] + '';
+                        var selected = (value_key == newArr[index]) ? 'selected' : '';
+                        oldOption = oldOption + '<option value="' + gold[key] + '" ' + selected + '>' + gold[key] + '</option>';
+                    }
+                }
+
+
 
                 // 3. 添加新的规则值时，保留历史信息
                 if (default_sku && type == 1) {
@@ -258,6 +294,7 @@
                     let sku_goods_no = _this.commonGoodsNo;
                     let sku_sku_no = _this.commonSkuNo;
                     let sku_make_charges = _this.commonMakeCharges;
+                    let sku_type_select = _this.commonTypeSelect;
                     let sku_material_type = _this.commonMaterialType;
                     let sku_goods_deposit = _this.commonGoodsDeposit;
                     let sku_commission = _this.commonCommission;
@@ -270,6 +307,7 @@
                             sku_goods_no = item_sku.goods_no;
                             sku_sku_no = item_sku.sku_no;
                             sku_make_charges = item_sku.make_charges;
+                            sku_type_select = oldOption;
                             sku_material_type = item_sku.material_type;
                             sku_goods_deposit = item_sku.goods_deposit;
                             sku_commission = item_sku.commission;
@@ -281,39 +319,30 @@
                     tbody_html += '<td data-field="goods_no"><input value="' + sku_goods_no + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="sku_no"><input value="' + sku_sku_no + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="make_charges"><input value="' + sku_make_charges + '" type="text" class="form-control"></td>';
-                    tbody_html += '<td><select class="sel form-control"></select></td>';
+                    tbody_html += '<td><select class="sel form-control">' + sku_type_select + '</select></td>';
                     tbody_html += '<td data-field="material_type" style="display:none"><input value="' + sku_material_type + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="goods_deposit"><input value="' + sku_goods_deposit + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="commission"><input value="' + sku_commission + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="weight"><input value="' + sku_weight + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="stock"><input value="' + sku_stock + '" type="text" class="form-control"></td>';
+
                 } else {
                     tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="' + _this.commonSkuId + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="goods_no"><input value="' + _this.commonGoodsNo + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="sku_no"><input value="' + _this.commonSkuNo + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="make_charges"><input value="' + _this.commonMakeCharges + '" type="text" class="form-control"></td>';
-                    tbody_html += '<td><select class="sel form-control"></select></td>';
+                    tbody_html += '<td><select class="sel form-control">' + oldOption + '</select></td>';
                     tbody_html += '<td data-field="material_type" style="display:none"><input value="' + _this.commonMaterialType + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="goods_deposit"><input value="' + _this.commonGoodsDeposit + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="commission"><input value="' + _this.commonCommission + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="weight"><input value="' + _this.commonWeight + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="stock"><input value="' + _this.commonStock + '" type="text" class="form-control"></td>';
-                }
 
+                }
                 tbody_html += '</tr>'
             });
             _this.warp.find('.sku_two_edit_warp tbody').html(tbody_html);
 
-            // 黄金数组
-            var arr = [{label: '999', value: '999'}, {label: '9999', value: '9999'}, {label: '99999', value: '99999'}, {label: '古法', value: '古法'}];
-            var json = JSON.stringify(arr);
-            var obj = JSON.parse(json);//解析字符串---解析成object数组
-            for (var i = 0; i < obj.length; i++) {
-                var pro = obj[i];
-                $("select.sel").each(function () {
-                    $(this).append("<option value='" + pro.label + "'>" + pro.label + "</option>");
-                });
-            }
 
             if (default_sku) {
                 // 填充数据
@@ -350,7 +379,7 @@
                 let tr = $(this);
                 // 获取当前循环值
                 let select = tr.find("option:selected").val();
-                tr.find('td input').eq(4).attr("value", select)
+                tr.find('td input').eq(4).attr("value", select);
 
                 let item_sku = {};
                 tr.find('td[data-field]').each(function () {
