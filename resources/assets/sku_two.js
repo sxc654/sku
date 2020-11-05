@@ -6,16 +6,18 @@
         this.warp = $(warp);
 
         this.attrs = {};
-        
+
         // 全新的黄金下拉
         var goldArr = ['999', '9999', '99999', '古法'];
         var newOption = '';
         for (var k in goldArr) {
             newOption = newOption + '<option value="' + goldArr[k] + '">' + goldArr[k] + '</option>';
         }
+
         this.commonTypeSelect = newOption;
 
-        this.commonPrice = 0; // 统一价格
+        // 统一价格
+        this.commonPrice = 0;
         // 增加字段
         this.commonSkuId = '';
         this.commonGoodsNo = '';
@@ -24,9 +26,11 @@
         this.commonMaterialType = '';
         this.commonGoodsDeposit = '';
         this.commonCommission = '';
-        this.commonStock = ''; // 统一库存
-        this.commonWeight = ''; // 统一重量
-        
+        // 统一库存
+        this.commonStock = '';
+        // 统一重量
+        this.commonWeight = '';
+
         this.resultSku = this.warp.find('.Js_two_sku_input').val();
         if (this.resultSku) {
             let arr = JSON.parse(this.resultSku).sku;
@@ -286,8 +290,9 @@
                         var selected = (value_key == newArr[index]) ? 'selected' : '';
                         oldOption = oldOption + '<option value="' + gold[key] + '" ' + selected + '>' + gold[key] + '</option>';
                     }
+                } else {
+                    oldOption = _this.commonTypeSelect;
                 }
-
                 // 3. 添加新的规则值时，保留历史信息
                 if (default_sku && type == 1) {
                     let sku_sku_id = _this.commonSkuId;
@@ -315,6 +320,9 @@
                             sku_stock = item_sku.stock;
                         }
                     })
+
+                    console.log(sku_type_select);
+
                     tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="' + sku_sku_id + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="goods_no"><input value="' + sku_goods_no + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="sku_no"><input value="' + sku_sku_no + '" type="text" class="form-control"></td>';
@@ -325,6 +333,7 @@
                     tbody_html += '<td data-field="commission"><input value="' + sku_commission + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="weight"><input value="' + sku_weight + '" type="text" class="form-control"></td>';
                     tbody_html += '<td data-field="stock"><input value="' + sku_stock + '" type="text" class="form-control"></td>';
+
 
                 } else {
                     tbody_html += '<td data-field="goods_sku_id" style="display:none"><input value="' + _this.commonSkuId + '" type="text" class="form-control"></td>';
@@ -380,7 +389,7 @@
                 // 获取当前循环值
                 let select = tr.find("option:selected").val();
                 tr.find('td input').eq(4).val(select);
-                
+
                 let item_sku = {};
                 tr.find('td[data-field]').each(function () {
                     let td = $(this);
@@ -400,5 +409,5 @@
     };
 
     window.SkuTwo = SKU;
-    
+
 })();

@@ -95,6 +95,8 @@
         // 绑定input变化事件
         _this.warp.find('.sku_four_attr_key_val tbody').on('change', 'input', _this.getSkuAttr.bind(_this));
         _this.warp.find('.sku_four_edit_warp tbody').on('keyup', 'input', _this.processSku.bind(_this));
+        // 绑定select变化事件
+        _this.warp.find('.sku_four_edit_warp tbody').on('change', 'select', _this.processSku.bind(_this));
 
         // 统一库存
         _this.warp.find('.sku_four_edit_warp thead').on('keyup', 'input.Js_stock', function () {
